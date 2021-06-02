@@ -1,2 +1,2 @@
 # wpcarparts
-WordPress plugin to upload a CSV that will be saved to none wp database
+WordPress plugin that gives WP-User the ability to upload a CSV-file that will be parsed and saved to a db.
