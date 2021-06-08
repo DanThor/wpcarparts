@@ -14,7 +14,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       wpcarparts
- * Plugin URI:        wpcarparts
+ * Plugin URI:        https://github.com/DanThor/wpcarparts
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
  * Version:           1.0.0
  * Author:            Daniel Thorsen

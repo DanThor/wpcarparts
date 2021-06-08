@@ -20,7 +20,8 @@
  * @subpackage Wpcarparts/admin
  * @author     Daniel Thorsen <daniel@4real.no>
  */
-class Wpcarparts_Admin {
+class Wpcarparts_Admin
+{
 
 	/**
 	 * The ID of this plugin.
@@ -47,11 +48,34 @@ class Wpcarparts_Admin {
 	 * @param      string    $plugin_name       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct($plugin_name, $version)
+	{
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		$this->load_dependencies();
+	}
+
+	/**
+	 * Load the required dependencies for the Admin facing functionality.
+	 *
+	 * Include the following files that make up the plugin:
+	 *
+	 * - Wppb_Demo_Plugin_Admin_Settings. Registers the admin settings and page.
+	 *
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function load_dependencies()
+	{
+
+		/**
+		 * The class responsible for orchestrating the actions and filters of the
+		 * core plugin.
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) .  'admin/class-wpcarparts-plugin-settings.php';
 	}
 
 	/**
@@ -59,7 +83,8 @@ class Wpcarparts_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -73,8 +98,7 @@ class Wpcarparts_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wpcarparts-admin.css', array(), $this->version, 'all' );
-
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/wpcarparts-admin.css', array(), $this->version, 'all');
 	}
 
 	/**
@@ -82,7 +106,8 @@ class Wpcarparts_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -96,8 +121,6 @@ class Wpcarparts_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wpcarparts-admin.js', array( 'jquery' ), $this->version, false );
-
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/wpcarparts-admin.js', array('jquery'), $this->version, false);
 	}
-
 }

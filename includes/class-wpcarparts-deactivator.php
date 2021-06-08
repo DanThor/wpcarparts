@@ -20,7 +20,8 @@
  * @subpackage Wpcarparts/includes
  * @author     Daniel Thorsen <daniel@4real.no>
  */
-class Wpcarparts_Deactivator {
+class Wpcarparts_Deactivator
+{
 
 	/**
 	 * Short Description. (use period)
@@ -29,8 +30,7 @@ class Wpcarparts_Deactivator {
 	 *
 	 * @since    1.0.0
 	 */
-	public static function deactivate() {
-
+	public static function deactivate()
+	{
 	}
-
 }
