@@ -20,7 +20,8 @@
  * @subpackage Wpcarparts/includes
  * @author     Daniel Thorsen <daniel@4real.no>
  */
-class Wpcarparts_Activator {
+class Wpcarparts_Activator
+{
 
 	/**
 	 * Short Description. (use period)
@@ -29,8 +30,7 @@ class Wpcarparts_Activator {
 	 *
 	 * @since    1.0.0
 	 */
-	public static function activate() {
-
+	public static function activate()
+	{
 	}
-
 }

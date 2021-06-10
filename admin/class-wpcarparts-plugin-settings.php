@@ -57,14 +57,17 @@ class Wpcarparts_Admin_Settings
     {
 
         //Add the menu to the Plugins set of menu items
-        add_plugins_page(
+        add_menu_page(
             'Carparts Uploader',                     // The title to be displayed in the browser window for this page.
-            'Carparts',                    // The text to be displayed for this menu item
+            'OEM Carparts',                    // The text to be displayed for this menu item
             'manage_options',                    // Which type of users can see this menu item
             'carparts-uploader',            // The unique ID - that is, the slug - for this menu item
-            array($this, 'render_settings_page_content')                // The name of the function to call when rendering this menu's page
+            array($this, 'render_settings_page_content'), // The name of the function to call when rendering this menu's page
+            'dashicons-list-view', // The icon to be displayed on the menu. Dashicons: https://developer.wordpress.org/resource/dashicons/
+            56 // The posistion of the menu
         );
     }
+
 
     /**
      * Renders a simple page to display for the theme menu defined above.
@@ -76,7 +79,7 @@ class Wpcarparts_Admin_Settings
         <div class="wrap">
             <h1 class="wp-heading-inline"><?= __('Carparts CSV-uploader', 'Wpcarparts'); ?></h1>
             <form method='post' action='<?= $_SERVER['REQUEST_URI']; ?>' enctype='multipart/form-data'>
-                <input type="file" name="import_file">
+                <input class="button" type="file" name="import_file" style="padding: 10px;">
                 <?php submit_button(); ?>
             </form>
         </div> <!-- /.wrap -->
@@ -97,8 +100,8 @@ class Wpcarparts_Admin_Settings
 
             $sql = "CREATE TABLE $tablename (
         id mediumint(11) NOT NULL AUTO_INCREMENT,
-        item_number mediumint(11) NOT NULL,
-        name varchar(80) NOT NULL,
+        item_number varchar(128) NOT NULL,
+        name varchar(128) NOT NULL,
         price mediumint(11) NOT NULL,
         weight mediumint(11) NOT NULL,
         PRIMARY KEY (id)
@@ -107,8 +110,8 @@ class Wpcarparts_Admin_Settings
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
             dbDelta($sql);
         }
+        return register_activation_hook(__FILE__, 'set_up_plugin_table');
     }
-    register_activation_hook( __FILE__, 'set_up_plugin_table' )
 
 
     public function parse_and_save_csv()
@@ -132,7 +135,7 @@ class Wpcarparts_Admin_Settings
                 // Open file in read mode
                 $csvFile = fopen($_FILES['import_file']['tmp_name'], 'r');
 
-                fgetcsv($csvFile); // Skipping header row
+                // fgetcsv($csvFile); // Skipping header row
 
                 // Read file
                 while (($csvData = fgetcsv($csvFile)) !== FALSE) {
@@ -150,16 +153,16 @@ class Wpcarparts_Admin_Settings
                     $itemWeight = trim($csvData[2]);
                     $itemPrice = trim($csvData[3]);
 
-                     
 
-                        // Check if variable is empty or not
-                        if (!empty($itemNumber) && !empty($itemName) && !empty($itemWeight) && !empty($itemPrice)) {
+                    // Check if variable is empty or not
+                    if (!empty($itemNumber) && !empty($itemName) && !empty($itemWeight) && !empty($itemPrice)) {
 
-                            // Check record already exists or not
-                    $cntSQL = "SELECT count(*) as count FROM {$tablename} where item_number='" . $itemNumber . "'";
-                    $record = $wpdb->get_results($cntSQL, OBJECT);
+                        // Check record already exists or not
+                        $cntSQL = "SELECT count(*) as count FROM {$tablename} where item_number='" . $itemNumber . "'";
+                        $record = $wpdb->get_results($cntSQL, OBJECT);
 
-                    $record[0]->count == 0 ? 
+
+                        $record[0]->count == 0 ?
                             // Insert Record
                             $wpdb->insert($tablename, array(
                                 'item_number' => $itemNumber,
@@ -167,19 +170,24 @@ class Wpcarparts_Admin_Settings
                                 'price' => $itemWeight,
                                 'weight' => $itemPrice
                             ))
-                        : // Update record
-                        $wpdb->update($tablename, array(
-                            'item_number' => $itemNumber,
-                            'name' => $itemName,
-                            'price' => $itemWeight,
-                            'weight' => $itemPrice
-                        ));
+                            : // Update record
+                            $wpdb->update(
+                                $tablename,
+                                array(
+                                    'item_number' => $itemNumber,
+                                    'name' => $itemName,
+                                    'price' => $itemWeight,
+                                    'weight' => $itemPrice
+                                ),
+                                array(
+                                    'item_number' => $itemNumber
+                                )
+                            );
 
-                            if ($wpdb->insert_id > 0) {
-                                $totalInserted++;
-                            }
+                        if ($wpdb->insert_id > 0) {
+                            $totalInserted++;
                         }
-                    
+                    }
                 }
                 echo "<h3 style='color: green;'>Total record inserted: " . $totalInserted . "</h3>";
             } else {
