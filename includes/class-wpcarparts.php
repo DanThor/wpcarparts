@@ -27,7 +27,8 @@
  * @subpackage Wpcarparts/includes
  * @author     Daniel Thorsen <daniel@4real.no>
  */
-class Wpcarparts {
+class Wpcarparts
+{
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -66,8 +67,9 @@ class Wpcarparts {
 	 *
 	 * @since    1.0.0
 	 */
-	public function __construct() {
-		if ( defined( 'WPCARPARTS_VERSION' ) ) {
+	public function __construct()
+	{
+		if (defined('WPCARPARTS_VERSION')) {
 			$this->version = WPCARPARTS_VERSION;
 		} else {
 			$this->version = '1.0.0';
@@ -78,7 +80,6 @@ class Wpcarparts {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
-
 	}
 
 	/**
@@ -97,33 +98,33 @@ class Wpcarparts {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function load_dependencies() {
+	private function load_dependencies()
+	{
 
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wpcarparts-loader.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wpcarparts-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wpcarparts-i18n.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wpcarparts-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wpcarparts-admin.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-wpcarparts-admin.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wpcarparts-public.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wpcarparts-public.php';
 
 		$this->loader = new Wpcarparts_Loader();
-
 	}
 
 	/**
@@ -135,12 +136,12 @@ class Wpcarparts {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function set_locale() {
+	private function set_locale()
+	{
 
 		$plugin_i18n = new Wpcarparts_i18n();
 
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
+		$this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
 	}
 
 	/**
@@ -150,14 +151,20 @@ class Wpcarparts {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function define_admin_hooks() {
+	private function define_admin_hooks()
+	{
 
-		$plugin_admin = new Wpcarparts_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Wpcarparts_Admin($this->get_plugin_name(), $this->get_version());
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
+		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 
+		$plugin_settings = new Wpcarparts_Admin_Settings($this->get_plugin_name(), $this->get_version());
+		$this->loader->add_action('admin_menu', $plugin_settings, 'setup_plugin_options_menu');
+		$this->loader->add_action('admin_menu', $plugin_settings, 'set_up_plugin_table');
+		$this->loader->add_action('admin_menu', $plugin_settings, 'parse_split_csv');
 	}
+
 
 	/**
 	 * Register all of the hooks related to the public-facing functionality
@@ -166,13 +173,13 @@ class Wpcarparts {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function define_public_hooks() {
+	private function define_public_hooks()
+	{
 
-		$plugin_public = new Wpcarparts_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new Wpcarparts_Public($this->get_plugin_name(), $this->get_version());
 
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-
+		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
+		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 	}
 
 	/**
@@ -180,7 +187,8 @@ class Wpcarparts {
 	 *
 	 * @since    1.0.0
 	 */
-	public function run() {
+	public function run()
+	{
 		$this->loader->run();
 	}
 
@@ -191,7 +199,8 @@ class Wpcarparts {
 	 * @since     1.0.0
 	 * @return    string    The name of the plugin.
 	 */
-	public function get_plugin_name() {
+	public function get_plugin_name()
+	{
 		return $this->plugin_name;
 	}
 
@@ -201,7 +210,8 @@ class Wpcarparts {
 	 * @since     1.0.0
 	 * @return    Wpcarparts_Loader    Orchestrates the hooks of the plugin.
 	 */
-	public function get_loader() {
+	public function get_loader()
+	{
 		return $this->loader;
 	}
 
@@ -211,8 +221,8 @@ class Wpcarparts {
 	 * @since     1.0.0
 	 * @return    string    The version number of the plugin.
 	 */
-	public function get_version() {
+	public function get_version()
+	{
 		return $this->version;
 	}
-
 }
