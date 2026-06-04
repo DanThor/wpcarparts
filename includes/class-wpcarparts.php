@@ -124,6 +124,15 @@ class Wpcarparts
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wpcarparts-public.php';
 
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wpcarparts-config.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wpcarparts-b2b.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wpcarparts-partshub-pricing.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wpcarparts-oem-repository.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wpcarparts-oem-images.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wpcarparts-oem-cart.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wpcarparts-oem-rest.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wpcarparts-oem-search.php';
+
 		$this->loader = new Wpcarparts_Loader();
 	}
 
@@ -180,6 +189,16 @@ class Wpcarparts
 
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
+
+		$oem_repository = new Wpcarparts_Oem_Repository();
+		$oem_images     = new Wpcarparts_Oem_Images();
+		$oem_search     = new Wpcarparts_Oem_Search($oem_repository, $oem_images);
+		$oem_cart       = new Wpcarparts_Oem_Cart($oem_repository);
+		$oem_rest       = new Wpcarparts_Oem_Rest();
+
+		$oem_search->register_hooks($this->loader);
+		$oem_cart->register_hooks($this->loader);
+		$oem_rest->register_hooks($this->loader);
 	}
 
 	/**
