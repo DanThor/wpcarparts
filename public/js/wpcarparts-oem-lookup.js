@@ -157,7 +157,7 @@
 			escapeHtml(kmValue) +
 			'" />' +
 			'<button type="submit" class="button alt partshub-cart__button">' +
-			escapeHtml(config.cart.addToCartText) +
+			escapeHtml(config.cart.partshubAddToCartText || 'Legg brukt del i handlekurv') +
 			'</button></form>'
 		);
 	}

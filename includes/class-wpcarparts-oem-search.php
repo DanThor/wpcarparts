@@ -77,10 +77,10 @@ class Wpcarparts_Oem_Search
 		$placeholder  = trailingslashit($upload_dir['baseurl']) . 'woocommerce-placeholder-247x247.png';
 
 		$cart_config = array(
-			'productId'       => $synthetic_id,
-			'addToCartUrl'    => '',
-			'addToCartText'   => __('Kjøp', 'wpcarparts'),
-			'canAddToCart'    => false,
+			'productId'            => $synthetic_id,
+			'addToCartUrl'         => '',
+			'partshubAddToCartText' => __( 'Legg brukt del i handlekurv', 'wpcarparts' ),
+			'canAddToCart'         => false,
 		);
 
 		if (
@@ -91,7 +91,6 @@ class Wpcarparts_Oem_Search
 			&& ! $synthetic->is_sold_individually()
 		) {
 			$cart_config['addToCartUrl']  = $synthetic->add_to_cart_url();
-			$cart_config['addToCartText'] = $synthetic->add_to_cart_text();
 			$cart_config['canAddToCart']  = true;
 		}
 

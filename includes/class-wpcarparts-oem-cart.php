@@ -93,13 +93,7 @@ class Wpcarparts_Oem_Cart
 		}
 
 		$retail_price = Wpcarparts_Partshub_Pricing::customer_price( $price_excl_vat );
-
-		$name_parts = array_filter( array( $model, $year ? (string) $year : '' ) );
-		$product_name = implode( ', ', $name_parts );
-		if ( $product_name === '' ) {
-			$product_name = __( 'Brukt del', 'wpcarparts' );
-		}
-		$product_name .= ' (' . $stock_number . ')';
+		$product_name = $this->format_partshub_cart_name( $model, $year, $stock_number );
 
 		$cart_item_data['partshub_stock_number'] = $stock_number;
 		$cart_item_data['partshub_price_excl']   = $price_excl_vat;
@@ -112,6 +106,40 @@ class Wpcarparts_Oem_Cart
 		}
 
 		return $cart_item_data;
+	}
+
+	/**
+	 * @param string $model
+	 * @param string $year
+	 * @param string $stock_number
+	 * @return string
+	 */
+	private function format_partshub_cart_name( $model, $year, $stock_number )
+	{
+		$details = implode(
+			' ',
+			array_filter(
+				array(
+					trim( (string) $model ),
+					trim( (string) $year ),
+				)
+			)
+		);
+
+		if ( $details === '' ) {
+			return sprintf(
+				/* translators: %s: third-party stock / part number */
+				__( 'Brukt del %s', 'wpcarparts' ),
+				$stock_number
+			);
+		}
+
+		return sprintf(
+			/* translators: 1: model and year, 2: third-party stock / part number */
+			__( 'Brukt del %1$s %2$s', 'wpcarparts' ),
+			$details,
+			$stock_number
+		);
 	}
 
 	/**
