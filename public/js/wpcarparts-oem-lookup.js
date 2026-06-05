@@ -204,6 +204,9 @@
 
 		return (
 			'<article class="partshub-card">' +
+			'<span class="wpcarparts-card__badge wpcarparts-card__badge--used">' +
+			escapeHtml(config.i18n.usedBadge || 'Brukt del') +
+			'</span>' +
 			'<div class="partshub-card__media">' +
 			'<img src="' +
 			escapeHtml(imgSrc) +

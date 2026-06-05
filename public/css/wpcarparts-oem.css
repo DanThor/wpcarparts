@@ -1,18 +1,129 @@
-.wpcarparts-oem-results .oem-product {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 1rem;
-	margin-bottom: 1.5rem;
-	padding-bottom: 1.5rem;
-	border-bottom: 1px solid #e5e5e5;
+/* Shared section headings */
+.wpcarparts-oem-results .oem-results__heading,
+.wpcarparts-oem-results .partshub-results__heading {
+	margin: 0 0 1rem;
+	font-size: 1rem;
+	font-weight: 600;
+	color: #1a1a1a;
 }
 
+/* OEM result block (one catalog row + optional used-parts below) */
+.wpcarparts-oem-results .oem-product {
+	margin-bottom: 2rem;
+}
+
+.wpcarparts-oem-results .oem-product:last-child {
+	margin-bottom: 1rem;
+}
+
+/* Shared product badges */
+.wpcarparts-oem-results .wpcarparts-card__badge {
+	display: inline-block;
+	margin-bottom: 0.75rem;
+	padding: 0.25rem 0.6rem;
+	border-radius: 4px;
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	line-height: 1.2;
+}
+
+.wpcarparts-oem-results .wpcarparts-card__badge--oem {
+	background: #e8f1fb;
+	color: #1e4b7a;
+}
+
+.wpcarparts-oem-results .wpcarparts-card__badge--used {
+	background: #faf0e4;
+	color: #8b4513;
+}
+
+/* Original (database) product card */
+.wpcarparts-oem-results .oem-card {
+	padding: 1rem;
+	background: #fff;
+	border: 1px solid #dce6f2;
+	border-left: 4px solid #2b6cb0;
+	border-radius: 6px;
+	box-shadow: 0 1px 2px rgba(26, 54, 93, 0.06);
+}
+
+.wpcarparts-oem-results .oem-card__layout {
+	display: grid;
+	grid-template-columns: 120px 1fr auto;
+	gap: 1rem;
+	align-items: start;
+}
+
+.wpcarparts-oem-results .oem-card__media {
+	text-align: center;
+}
+
+.wpcarparts-oem-results .oem-card__media img {
+	display: inline-block;
+	max-width: 120px;
+	height: auto;
+	object-fit: contain;
+	border-radius: 4px;
+	background: #f7f9fc;
+}
+
+.wpcarparts-oem-results .oem-card__title {
+	margin: 0 0 0.5rem;
+	font-size: 1rem;
+	font-weight: 600;
+	line-height: 1.35;
+	color: #1a1a1a;
+}
+
+.wpcarparts-oem-results .oem-card__field {
+	margin: 0.25rem 0;
+	font-size: 0.9rem;
+	line-height: 1.4;
+	color: #333;
+}
+
+.wpcarparts-oem-results .oem-card__label {
+	font-weight: 600;
+	color: #555;
+}
+
+.wpcarparts-oem-results .oem-card__price {
+	margin: 0.75rem 0 0;
+	font-size: 1.125rem;
+	font-weight: 700;
+	color: #1a1a1a;
+}
+
+.wpcarparts-oem-results .oem-card__actions {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	min-width: 10rem;
+}
+
+.wpcarparts-oem-results .oem-card__cart {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	margin: 0;
+}
+
+.wpcarparts-oem-results .oem-card__cart .quantity {
+	margin: 0;
+}
+
+.wpcarparts-oem-results .oem-card__button {
+	width: 100%;
+	margin: 0;
+}
+
+/* Partshub slot + used parts */
 .wpcarparts-oem-results .oem-third-party-slot {
-	flex: 1 1 100%;
-	margin-top: 0.75rem;
+	margin-top: 1rem;
 	padding: 0;
 	background: transparent;
-	border-radius: 0;
 	min-height: 0;
 }
 
@@ -26,9 +137,10 @@
 .wpcarparts-oem-results .oem-third-party-loader {
 	display: block;
 	padding: 0.75rem 1rem;
-	background: #f7f7f7;
-	border-radius: 4px;
-	color: #666;
+	background: #faf0e4;
+	border: 1px dashed #e8d4bc;
+	border-radius: 6px;
+	color: #7a5c3a;
 	font-style: italic;
 }
 
@@ -36,19 +148,13 @@
 	margin: 0;
 	padding: 0.75rem 1rem;
 	background: #fef7f7;
-	border-radius: 4px;
+	border-radius: 6px;
 	color: #b32d2e;
 }
 
 .wpcarparts-oem-results .partshub-results {
 	width: 100%;
-}
-
-.wpcarparts-oem-results .partshub-results__heading {
-	margin: 0 0 0.75rem;
-	font-size: 1rem;
-	font-weight: 600;
-	color: #1a1a1a;
+	padding-top: 0.25rem;
 }
 
 .wpcarparts-oem-results .partshub-results__grid {
@@ -62,9 +168,11 @@
 	flex-direction: column;
 	gap: 0.75rem;
 	padding: 1rem;
-	background: #f7f7f7;
-	border: 1px solid #e8e8e8;
+	background: #faf8f5;
+	border: 1px solid #e8dfd4;
+	border-left: 4px solid #c05621;
 	border-radius: 6px;
+	box-shadow: 0 1px 2px rgba(120, 72, 32, 0.06);
 }
 
 .wpcarparts-oem-results .partshub-card__media {
@@ -109,4 +217,18 @@
 
 .wpcarparts-oem-results .partshub-cart__button {
 	width: 100%;
+}
+
+@media (max-width: 767px) {
+	.wpcarparts-oem-results .oem-card__layout {
+		grid-template-columns: 1fr;
+	}
+
+	.wpcarparts-oem-results .oem-card__media {
+		text-align: left;
+	}
+
+	.wpcarparts-oem-results .oem-card__actions {
+		min-width: 0;
+	}
 }

@@ -48,13 +48,6 @@ class Wpcarparts_Oem_Search
 			return;
 		}
 
-		if (! Wpcarparts_Config::is_partshub_configured()) {
-			return;
-		}
-
-		$handle = 'wpcarparts-oem-lookup';
-		$path   = plugin_dir_path(dirname(__FILE__)) . 'public/js/wpcarparts-oem-lookup.js';
-
 		wp_enqueue_style(
 			'wpcarparts-oem',
 			plugin_dir_url(dirname(__FILE__)) . 'public/css/wpcarparts-oem.css',
@@ -62,6 +55,13 @@ class Wpcarparts_Oem_Search
 			WPCARPARTS_VERSION,
 			'all'
 		);
+
+		if (! Wpcarparts_Config::is_partshub_configured()) {
+			return;
+		}
+
+		$handle = 'wpcarparts-oem-lookup';
+		$path   = plugin_dir_path(dirname(__FILE__)) . 'public/js/wpcarparts-oem-lookup.js';
 
 		wp_enqueue_script(
 			$handle,
@@ -79,7 +79,7 @@ class Wpcarparts_Oem_Search
 		$cart_config = array(
 			'productId'            => $synthetic_id,
 			'addToCartUrl'         => '',
-			'partshubAddToCartText' => __( 'Legg brukt del i handlekurv', 'wpcarparts' ),
+			'partshubAddToCartText' => __('Legg brukt del i handlekurv', 'wpcarparts'),
 			'canAddToCart'         => false,
 		);
 
@@ -108,6 +108,7 @@ class Wpcarparts_Oem_Search
 					'loading'         => __('Henter bruktdeler…', 'wpcarparts'),
 					'error'           => __('Kunne ikke hente bruktdeler.', 'wpcarparts'),
 					'heading'         => __('Brukte deler', 'wpcarparts'),
+					'usedBadge'       => __('Brukt del', 'wpcarparts'),
 					'kmStand'         => __('Km.stand', 'wpcarparts'),
 					'model'           => __('Modell', 'wpcarparts'),
 					'year'            => __('År', 'wpcarparts'),
@@ -141,6 +142,7 @@ class Wpcarparts_Oem_Search
 		$synthetic        = function_exists('wc_get_product') ? wc_get_product($synthetic_id) : false;
 
 		echo '<div class="wpcarparts-oem-results">';
+		echo '<h3 class="oem-results__heading">' . esc_html__('Originale deler', 'wpcarparts') . '</h3>';
 
 		foreach ($products as $product) {
 			$this->render_product_row($product, $synthetic, $partshub_enabled);
@@ -167,31 +169,52 @@ class Wpcarparts_Oem_Search
 			class="oem-product"
 			data-oe-part-number="<?php echo esc_attr($mpn); ?>"
 			data-manufacturer="<?php echo esc_attr($manufacturer); ?>">
-			<img
-				width="120"
-				height="120"
-				src="<?php echo esc_url($image_url); ?>"
-				alt="<?php echo esc_attr($product->item_name); ?>" />
-			<div class="oem-product-col">
-				<p class="oem-product-name"><?php echo esc_html($product->item_name); ?></p>
-				<p class="oem-product-sku"><?php esc_html_e('Varenummer:', 'wpcarparts'); ?> <?php echo esc_html($mpn); ?></p>
-				<p class="oem-product-sku"><?php esc_html_e('Produsent:', 'wpcarparts'); ?> <?php echo esc_html($manufacturer); ?></p>
-				<p class="oem-product-sku">
-					<?php
-					printf(
-						/* translators: %s: estimated shipping time */
-						esc_html__('Estimert sendt fra lager i Oslo: %s', 'wpcarparts'),
-						esc_html($estimated_shipping)
-					);
-					?>
-				</p>
-			</div>
-			<div class="oem-product-col">
-				<span class="oem-product-price"><bdi><?php echo $price_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built with esc_html 
-														?></bdi></span>
-				<?php echo $this->get_add_to_cart_form_html($synthetic, $mpn); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
-				?>
-			</div>
+			<article class="oem-card">
+				<span class="wpcarparts-card__badge wpcarparts-card__badge--oem">
+					<?php esc_html_e('Originaldel', 'wpcarparts'); ?>
+				</span>
+				<div class="oem-card__layout">
+					<div class="oem-card__media">
+						<img
+							width="120"
+							height="120"
+							src="<?php echo esc_url($image_url); ?>"
+							alt="<?php echo esc_attr($product->item_name); ?>"
+							loading="lazy" />
+					</div>
+					<div class="oem-card__body">
+						<h4 class="oem-card__title"><?php echo esc_html($product->item_name); ?></h4>
+						<p class="oem-card__field">
+							<span class="oem-card__label"><?php esc_html_e('Varenummer:', 'wpcarparts'); ?></span>
+							<span class="oem-card__value"><?php echo esc_html($mpn); ?></span>
+						</p>
+						<p class="oem-card__field">
+							<span class="oem-card__label"><?php esc_html_e('Produsent:', 'wpcarparts'); ?></span>
+							<span class="oem-card__value"><?php echo esc_html($manufacturer); ?></span>
+						</p>
+						<p class="oem-card__field">
+							<span class="oem-card__label"><?php esc_html_e('Levering:', 'wpcarparts'); ?></span>
+							<span class="oem-card__value">
+								<?php
+								printf(
+									/* translators: %s: estimated shipping time */
+									esc_html__('Estimert sendt fra lager i Oslo: %s', 'wpcarparts'),
+									esc_html($estimated_shipping)
+								);
+								?>
+							</span>
+						</p>
+						<p class="oem-card__price">
+							<bdi><?php echo $price_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built with esc_html 
+									?></bdi>
+						</p>
+					</div>
+					<div class="oem-card__actions">
+						<?php echo $this->get_add_to_cart_form_html($synthetic, $mpn); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
+						?>
+					</div>
+				</div>
+			</article>
 			<?php if ($partshub_enabled) : ?>
 				<div class="oem-third-party-slot" aria-live="polite">
 					<span class="oem-third-party-loader"><?php esc_html_e('Henter tilleggsdata…', 'wpcarparts'); ?></span>
@@ -239,10 +262,10 @@ class Wpcarparts_Oem_Search
 
 		ob_start();
 	?>
-		<form action="<?php echo esc_url($synthetic->add_to_cart_url()); ?>" class="oem-cart" method="post" enctype="multipart/form-data">
+		<form action="<?php echo esc_url($synthetic->add_to_cart_url()); ?>" class="oem-cart oem-card__cart" method="post" enctype="multipart/form-data">
 			<?php woocommerce_quantity_input(array(), $synthetic, false); ?>
 			<input type="hidden" name="item_number" value="<?php echo esc_attr($mpn); ?>" />
-			<button type="submit" class="button alt"><?php echo esc_html($synthetic->add_to_cart_text()); ?></button>
+			<button type="submit" class="button alt oem-card__button"><?php echo esc_html($synthetic->add_to_cart_text()); ?></button>
 		</form>
 <?php
 		return ob_get_clean();
