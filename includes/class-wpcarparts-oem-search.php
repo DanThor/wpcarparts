@@ -35,7 +35,8 @@ class Wpcarparts_Oem_Search
 	 */
 	public function register_hooks(Wpcarparts_Loader $loader)
 	{
-		$loader->add_action('woocommerce_before_main_content', $this, 'render_search_results', 10);
+		$loader->add_action('woocommerce_after_shop_loop', $this, 'render_search_results', 20);
+		$loader->add_action('woocommerce_no_products_found', $this, 'render_search_results', 20);
 		$loader->add_action('wp_enqueue_scripts', $this, 'enqueue_assets');
 	}
 
@@ -48,11 +49,14 @@ class Wpcarparts_Oem_Search
 			return;
 		}
 
+		$plugin_root = plugin_dir_path(dirname(__FILE__));
+		$css_path    = $plugin_root . 'public/css/wpcarparts-oem.css';
+
 		wp_enqueue_style(
 			'wpcarparts-oem',
 			plugin_dir_url(dirname(__FILE__)) . 'public/css/wpcarparts-oem.css',
 			array(),
-			WPCARPARTS_VERSION,
+			file_exists($css_path) ? (string) filemtime($css_path) : WPCARPARTS_VERSION,
 			'all'
 		);
 
@@ -60,14 +64,14 @@ class Wpcarparts_Oem_Search
 			return;
 		}
 
-		$handle = 'wpcarparts-oem-lookup';
-		$path   = plugin_dir_path(dirname(__FILE__)) . 'public/js/wpcarparts-oem-lookup.js';
+		$handle   = 'wpcarparts-oem-lookup';
+		$js_path  = $plugin_root . 'public/js/wpcarparts-oem-lookup.js';
 
 		wp_enqueue_script(
 			$handle,
 			plugin_dir_url(dirname(__FILE__)) . 'public/js/wpcarparts-oem-lookup.js',
 			array(),
-			file_exists($path) ? (string) filemtime($path) : WPCARPARTS_VERSION,
+			file_exists($js_path) ? (string) filemtime($js_path) : WPCARPARTS_VERSION,
 			true
 		);
 
@@ -120,7 +124,7 @@ class Wpcarparts_Oem_Search
 	}
 
 	/**
-	 * Output OEM rows above WooCommerce product loop on search.
+	 * Output OEM rows below WooCommerce search results.
 	 */
 	public function render_search_results()
 	{
@@ -170,9 +174,7 @@ class Wpcarparts_Oem_Search
 			data-oe-part-number="<?php echo esc_attr($mpn); ?>"
 			data-manufacturer="<?php echo esc_attr($manufacturer); ?>">
 			<article class="oem-card">
-				<span class="wpcarparts-card__badge wpcarparts-card__badge--oem">
-					<?php esc_html_e('Originaldel', 'wpcarparts'); ?>
-				</span>
+
 				<div class="oem-card__layout">
 					<div class="oem-card__media">
 						<img
